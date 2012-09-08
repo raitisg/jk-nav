@@ -40,4 +40,4 @@ There are some options you can change:
 
 ToDos
 =====
-Detect current position on keypress and navigate from there. Currently script just starts from beginning even if you want to start somewhere in the middle
+Continuous scrolling when J-K key is held down

@@ -19,7 +19,6 @@
 	var img = document.getElementsByTagName('img');
 	var len = img.length;
 	var images = [];
-	var index = -1;
 
 	for (var i=0; i<len; i++) {
 		if (img[i].width * img[i].height >= area) {
@@ -34,45 +33,59 @@
 	}
 
 	document.onkeyup = function (e) {
-		var action = false;
-
 		var key = (window.event) ? event.keyCode : e.keyCode;
 
 		switch (key) {
 			case 74: // J
-				if (index < (len - 1)) {
-					action = true;
-					index++;
-				}
-			break;
-
 			case 75: // K
-				if (index > 0) {
-					action = true;
-					index--;
-				}
-			break;
-		}
 
-		if (action) {
-			var position = getElementXY(images[index]);
-			if (smooth_scroll) {
-				var steps = duration / interval;
-				var x_step = (horizontal_scroll ? Math.round((position.x - scrollX()) / steps) : 0);
-				var y_step = Math.round((position.y - scrollY()) / steps);
-				var step = 0;
+				var page_y = scrollY();
+				index = -1;
 
-				function smoothScrollBy() {
-					window.scrollBy(x_step, y_step);
-					if (++step < steps) {
-						setTimeout(smoothScrollBy, interval);
+				if (key == 75) {
+					for (var i=len-1; i>-1; i--) {
+						position = getElementXY(images[i]);
+						if ((position.y + 5) <= page_y) {
+							index = i;
+							break;
+						}
+					}
+				} else {
+					for (var i=0; i<len; i++) {
+						position = getElementXY(images[i]);
+						if ((position.y - 5) >= page_y) {
+							index = i;
+							break;
+						}
 					}
 				}
 
-				smoothScrollBy();
-			} else {
-				scrollTo((horizontal_scroll ? position.x : 0), position.y);
-			}
+				if (index === -1) {
+					return;
+				}
+
+				var position = getElementXY(images[index]);
+				if (smooth_scroll) {
+					var steps = duration / interval;
+					var x_step = (horizontal_scroll ? Math.round((position.x - scrollX()) / steps) : 0);
+					var y_step = Math.round((position.y - scrollY()) / steps);
+					var step = 0;
+
+					function smoothScrollBy() {
+						window.scrollBy(x_step, y_step);
+						if (++step < steps) {
+							setTimeout(smoothScrollBy, interval);
+						} else {
+							window.scrollTo(0, position.y);
+						}
+					}
+
+					smoothScrollBy();
+				} else {
+					scrollTo((horizontal_scroll ? position.x : 0), position.y);
+				}
+
+			break;
 		}
 	};
 
