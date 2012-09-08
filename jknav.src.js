@@ -62,8 +62,6 @@
 				var y_step = Math.round((position.y - scrollY()) / steps);
 				var step = 0;
 
-				smoothScrollBy();
-
 				function smoothScrollBy() {
 					window.scrollBy(x_step, y_step);
 					if (++step < steps) {
@@ -71,6 +69,7 @@
 					}
 				}
 
+				smoothScrollBy();
 			} else {
 				scrollTo((horizontal_scroll ? position.x : 0), position.y);
 			}
